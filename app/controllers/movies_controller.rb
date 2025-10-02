@@ -22,6 +22,26 @@ class MoviesController < ApplicationController
     if @sort_by.present?
       @movies = @movies.sort_by_column(@sort_by)
     end
+
+    if params[:ratings].present? || params[:sort_by].present?
+      
+      session[:ratings] = params[:ratings]
+      session[:sort_by] = params[:sort_by]
+    
+    
+    elsif session[:ratings].present? || session[:sort_by].present?
+      
+      redirect_params = {}
+      if session[:ratings].present?
+        redirect_params[:ratings] = session[:ratings]
+      end
+      if session[:sort_by].present?
+        redirect_params[:sort_by] = session[:sort_by]
+      end
+      
+      return redirect_to movies_path(redirect_params)
+    end
+
   end
 
   def new
